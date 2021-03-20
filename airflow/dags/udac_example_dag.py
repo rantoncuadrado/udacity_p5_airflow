@@ -21,7 +21,7 @@ default_args = {
 #   'retries': 5,
 #   'retry_delay': timedelta(minutes=2),
     'max_active_runs_per_dag' : 3,
-    'max_active_runs': 1,
+    'max_active_runs': 3,
     'catchup': False,
     'email_on_retry': False,
 }
@@ -65,29 +65,45 @@ load_songplays_table = LoadFactOperator(
     task_id='Load_songplays_fact_table',
     dag=dag,
     redshift_conn_id="redshift",
-    table="songplays",
+    table_name="songplays",
     truncate_table=True,
     sql_query=SqlQueries.songplay_table_insert
 )
 
 load_user_dimension_table = LoadDimensionOperator(
     task_id='Load_user_dim_table',
-    dag=dag
+    dag=dag,
+    redshift_conn_id='redshift',
+    table_name='users',
+    truncate_table=True,
+    sql_query=SqlQueries.user_table_insert
 )
 
 load_song_dimension_table = LoadDimensionOperator(
     task_id='Load_song_dim_table',
-    dag=dag
+    dag=dag,
+    redshift_conn_id='redshift',
+    table_name='songs',
+    truncate_table=True,
+    sql_query=SqlQueries.song_table_insert
 )
 
 load_artist_dimension_table = LoadDimensionOperator(
     task_id='Load_artist_dim_table',
-    dag=dag
+    dag=dag,
+    redshift_conn_id='redshift',
+    table_name='artists',
+    truncate_table=True,
+    sql_query=SqlQueries.artist_table_insert
 )
 
 load_time_dimension_table = LoadDimensionOperator(
     task_id='Load_time_dim_table',
-    dag=dag
+    dag=dag,
+    redshift_conn_id='redshift',
+    table_name='time',
+    truncate_table=True,
+    sql_query=SqlQueries.time_table_insert
 )
 
 run_quality_checks = DataQualityOperator(
