@@ -5,9 +5,14 @@ from airflow.contrib.hooks.aws_hook import AwsHook
 
 class StageToRedshiftOperator(BaseOperator):
     """
-    Executes a COPY command to load files from s3 to Redshift staging tables 
-    
-    Inspired in this operator (https://airflow.readthedocs.io/en/stable/_modules/airflow/operators/s3_to_redshift_operator.html)
+    Executes a COPY command to load files from s3 to Redshift staging tables. It needs 
+        aws_conn_id: Amazon Web Services connection (where the buckets are)
+        s3_bucket and s3_key 
+        file_format, log_file
+        region
+          
+        redshift_conn_id: Redshift connection
+        table: The name of the table where we'd like to copy the bucket content
     """
     
     ui_color = '#ff0000'
@@ -64,7 +69,4 @@ class StageToRedshiftOperator(BaseOperator):
         
         redshift_hook.run(copy_query)
         self.log.info(f"RAUL PROJECT: Copied Table {self.table} ")
-
-
-
 

@@ -3,10 +3,19 @@ from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 class LoadDimensionOperator(BaseOperator):
+    """
+    Loads dimension tables. 
+    Parameters: 
+        redshift_conn_id: The Redshift connection id
+        sql_query: a query to execute to get rows to populate the table with
+        table_name: the table name to be populated
+        truncate_table: Boolean indicating if the table should be emptied before adding the rows obtained from sql_query    
+    """
 
     truncate_sql = """
     TRUNCATE TABLE {};
     """
+    
     insert_sql = """
     INSERT INTO {} {};
     """
@@ -33,8 +42,6 @@ class LoadDimensionOperator(BaseOperator):
 
         if self.truncate_table:
             self.log.info(f"RAUL PROJECT: About to truncate table {self.table_name}")
-            #redshift_hook.run(f"TRUNCATE TABLE {self.table_name}")
-            #trying out this way
             redshift_hook.run(LoadDimensionOperator.truncate_sql.format(self.table_name))
         
         self.log.info(f"RAUL PROJECT: About to load {self.table_name} Table.")

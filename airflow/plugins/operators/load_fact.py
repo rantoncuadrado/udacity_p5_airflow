@@ -4,7 +4,24 @@ from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
 class LoadFactOperator(BaseOperator):
+    
+    """
+    Loads facts table (songplays). 
+    Parameters: 
+        redshift_conn_id: The Redshift connection id
+        sql_query: a query to execute to get rows to populate the table with
+        table_name: the table name to be populated
+        truncate_table: Boolean indicating if the table should be emptied before adding the rows obtained from sql_query    
+    """
 
+    truncate_sql = """
+    TRUNCATE TABLE {};
+    """
+        
+    insert_sql = """
+    INSERT INTO songplays (playid, start_time, userid, level, songid, artistid, sessionid, location, user_agent) {};
+    """
+        
     ui_color = '#00FF00'
 
     @apply_defaults
@@ -24,12 +41,11 @@ class LoadFactOperator(BaseOperator):
     def execute(self, context):
         redshift_hook = PostgresHook(self.redshift_conn_id)
         
-        if self.truncate_table == True:
-            self.log.info(f"RAUL PROJECT: About to truncate table {self.table_name}.")
-            redshift_hook.run(f"TRUNCATE TABLE {self.table_name}")
+        if self.truncate_table:
+            self.log.info(f"RAUL PROJECT: About to truncate table {self.table_name}")
+            redshift_hook.run(LoadFactOperator.truncate_sql.format(self.table_name))
             
-        self.log.info(f"RAUL PROJECT: About to load fact table {self.table_name}.")
-        self.log.info(self.sql_query)
-        redshift_hook.run(self.sql_query)
+        self.log.info(f"RAUL PROJECT: About to load fact table {self.table_name}. Query: {LoadFactOperator.insert_sql.format(self.sql_query)}")
+        redshift_hook.run(LoadFactOperator.insert_sql.format(self.sql_query))
         self.log.info(f"RAUL PROJECT: Loaded Fact table {self.table_name}.")
   
