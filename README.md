@@ -33,12 +33,15 @@ These steps are needed to prepare the workspace to run the code
 5. __Setup AirFLow Params__: https://classroom.udacity.com/nanodegrees/nd027/parts/45d1c3b1-d87b-4578-a6d0-7e86bb5fea6c/modules/57c3b9d1-4d8b-4afe-bfb4-92cfac622c7f/lessons/4d1d5892-2cab-4456-8b1a-fb2b5fa1488d/concepts/f5c91ffd-60dc-4af3-bc86-44efce885834 
 
 __CONNECTION 1__
+```
 Conn Id: Enter aws_credentials.
 Conn Type: Enter Amazon Web Services.
 Login: Enter your Access key ID from the IAM User credentials you downloaded earlier.
 Password: Enter your Secret access key from the IAM User credentials you downloaded earlier.
+```
 
 __CONNECTION 2__
+```
 Conn Id: Enter redshift.
 Conn Type: Enter Postgres.
 Host: Enter the endpoint of your Redshift cluster, excluding the port at the end. You can find this by selecting your cluster in the Clusters page of the Amazon Redshift console. See where this is located in the screenshot below. IMPORTANT: Make sure to NOT include the port at the end of the Redshift endpoint string.
@@ -47,6 +50,7 @@ Login: Enter awsuser.
 Password: Enter the password you created when launching your Redshift cluster.
 Port: Enter 5439.
 
+```
 5. __Create tables in RedShift__ (https://github.com/rantoncuadrado/udacity_p5_airflow/blob/main/Basic%20Project%20Template/create_tables.sql)
 I opted for manually create them in the Redshift console
 
